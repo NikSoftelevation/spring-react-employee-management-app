@@ -1,19 +1,29 @@
 import React, { useState } from "react";
+import EmployeeService from "../services/EmployeeService";
+import { Link, useHistory } from "react-router-dom";
 
 const AddEmployeeComponent = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [emailId, setEmailId] = useState("");
+  const history = useHistory();
 
   const saveEmployee = (e) => {
     e.preventDefault();
     const employee = { firstName, lastName, emailId };
-    console.log(employee);
+    EmployeeService.createEmployee(employee)
+      .then((response) => {
+        console.log(response.data);
+        history.push("/employees");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <div>
-      <br /> <br />
+      <br />
       <div className="container">
         <div className="row">
           <div className="card col-md-6 offset-md-3 offset-md-3">
@@ -53,12 +63,17 @@ const AddEmployeeComponent = () => {
                     onChange={(e) => setEmailId(e.target.value)}
                   />
                 </div>
-                <button
-                  className="btn btn-success"
-                  onClick={(e) => saveEmployee(e)}
-                >
-                  Submit
-                </button>
+                <div>
+                  <button
+                    className="btn btn-success"
+                    onClick={(e) => saveEmployee(e)}
+                  >
+                    Submit
+                  </button>
+                  <Link to="/employees" className="btn btn-danger">
+                    Cancel
+                  </Link>
+                </div>
               </form>
             </div>
           </div>
