@@ -43,4 +43,11 @@ public class EmployeeController {
         Employee updatedEmployee = employeeRepository.save(employeeToUpdate);
         return new ResponseEntity<>(updatedEmployee, HttpStatus.ACCEPTED);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable("id") Long id) {
+        Employee employeeToDelete = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user not found with " + id));
+        employeeRepository.delete(employeeToDelete);
+        return new ResponseEntity<>(HttpStatus.GONE);
+    }
 }
