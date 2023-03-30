@@ -1,3 +1,4 @@
+import { Button } from "bootstrap";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import EmployeeService from "../services/EmployeeService";
@@ -6,6 +7,10 @@ const ListEmployeeComponent = () => {
   const [employees, setEmployees] = useState([]);
 
   useEffect(() => {
+    getAllEmployees();
+  }, []);
+
+  const getAllEmployees = () => {
     EmployeeService.getAllEmployees()
       .then((response) => {
         setEmployees(response.data);
@@ -13,7 +18,16 @@ const ListEmployeeComponent = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  };
+  const deleteEmployee = (employeeId) => {
+    EmployeeService.deleteEmployee(employeeId)
+      .then((response) => {
+        getAllEmployees();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="container">
@@ -36,13 +50,21 @@ const ListEmployeeComponent = () => {
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
               <td>{employee.emailId}</td>
+
               <td>
                 <Link
                   className="btn btn-info"
-                  to={"/edit-employee/${employee.id}"}
+                  to={`/edit-employee/${employee.id}`}
                 >
                   Update
                 </Link>
+                <Button
+                  className="btn btn-danger"
+                  onClick={() => deleteEmployee(employee.id)}
+                  style={{ marginLeft: "10px" }}
+                >
+                  Delete
+                </Button>
               </td>
             </tr>
           ))}
