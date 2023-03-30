@@ -22,8 +22,9 @@ public class EmployeeController {
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
+
     @GetMapping("{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id){
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id) {
         Employee getEmployeeById = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + "not found"));
         return new ResponseEntity<>(getEmployeeById, HttpStatus.OK);
     }
@@ -31,5 +32,15 @@ public class EmployeeController {
     @PostMapping
     public Employee createEmployee(@RequestBody Employee employee) {
         return employeeRepository.save(employee);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id, @RequestBody Employee employee) {
+        Employee employeeToUpdate = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with " + id));
+        employeeToUpdate.setFirstName(employee.getFirstName());
+        employeeToUpdate.setLastName(employee.getLastName());
+        employeeToUpdate.setEmailId(employee.getEmailId());
+        Employee updatedEmployee = employeeRepository.save(employeeToUpdate);
+        return new ResponseEntity<>(updatedEmployee, HttpStatus.ACCEPTED);
     }
 }
