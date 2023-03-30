@@ -19,6 +19,10 @@ function App() {
               path="/add-employee"
               component={AddEmployeeComponent}
             ></Route>
+            <Route
+              path="/edit-employee/:id"
+              component={AddEmployeeComponent}
+            ></Route>
           </Switch>
         </div>
         <FooterComponent />
